@@ -1,6 +1,7 @@
 const ACTIONS = {
   TODOS_TODO_ADDED: 'todos/todoAdded',
   TODOS_TODO_TOGGLE: 'todos/todoToggle',
+  FILTERS_STATUS_FILTER_CHANGED: 'filters/statusFilterChanged',
 }
 
 const initialState = {
@@ -65,6 +66,21 @@ export default appReducer = (state = initialState, action) => {
             completed: !todo.completed,
           }
         }),
+      }
+    }
+
+    // CHANGE FILTER STATUS
+    case ACTIONS.FILTERS_STATUS_FILTER_CHANGED: {
+      return {
+        // COPY THE WHOLE STATE
+        ...state,
+        // overwrite the filters value
+        filters: {
+          // copy the other filter fileds
+          ...state.filters,
+          // and replace the status filed with the new value
+          status: action.payload,
+        },
       }
     }
 
