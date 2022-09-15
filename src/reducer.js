@@ -1,5 +1,6 @@
 const ACTIONS = {
   TODOS_TODO_ADDED: 'todos/todoAdded',
+  TODOS_TODO_TOGGLE: 'todos/todoToggle',
 }
 
 const initialState = {
@@ -25,6 +26,8 @@ export default appReducer = (state = initialState, action) => {
   // The reducer normally looks at the action type field to decide what happens
   switch (action.type) {
     // Do something here based on the different types of actions
+
+    // ADD TODO
     case ACTIONS.TODOS_TODO_ADDED: {
       // we need to return a new state object
       return {
@@ -44,6 +47,27 @@ export default appReducer = (state = initialState, action) => {
         ],
       }
     }
+
+    // TOGGLE/EDIT TODO
+    case ACTIONS.TODOS_TODO_TOGGLE: {
+      return {
+        // again copy th entire state object
+        ...state,
+        // this time, we nee to make a copy of the old todos array
+        todos: state.todos.map((todo) => {
+          // If this isn't the todo item we're looking fo r, leave it alone
+          if (todo.id !== action.payload) return todo
+
+          //   we've found the todo that has to change. Return a copy
+          return {
+            ...todo,
+            // flip the completed flag
+            completed: !todo.completed,
+          }
+        }),
+      }
+    }
+
     default:
       // If this reducer doesn't recognize the action type, or doesn't
       // care about this specific action, return the existing state unchanged
