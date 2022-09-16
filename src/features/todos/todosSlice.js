@@ -21,7 +21,7 @@ const nextTdoId = (todos) => {
   return maxId + 1
 }
 
-export default todosReducer = (state = initialState, action) => {
+const todosReducer = (state = initialState, action) => {
   // The reducer normally looks at the action type field to decide what happens
   switch (action.type) {
     // Do something here based on the different types of actions
@@ -72,3 +72,5 @@ export default todosReducer = (state = initialState, action) => {
       return state
   }
 }
+
+export default todosReducer
