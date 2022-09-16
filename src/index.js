@@ -5,8 +5,15 @@ import App from './App'
 
 import './api/server'
 
-// test
 import store from './store'
+
+console.log('dispatching action');
+store.dispatch({type:'todos/todoAdded', payload:'Learn about actions'})
+console.log('state after dispatch: ', store.getState());
+console.log('dispatch complete');
+
+// test
+
 console.log('initial state', store.getState());
 
 const unsubscribe = store.subscribe(()=>console.log('state after dispatch', store.getState()))
