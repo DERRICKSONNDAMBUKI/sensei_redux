@@ -5,6 +5,30 @@ import App from './App'
 
 import './api/server'
 
+// test
+import store from './store'
+console.log('initial state', store.getState());
+
+const unsubscribe = store.subscribe(()=>console.log('state after dispatch', store.getState()))
+
+// dispatch
+store.dispatch({ type: 'todos/todoAdded', payload: 'Learn about actions' })
+store.dispatch({ type: 'todos/todoAdded', payload: 'Learn about reducers' })
+store.dispatch({ type: 'todos/todoAdded', payload: 'Learn about stores' })
+
+store.dispatch({ type: 'todos/todoToggled', payload: 0 })
+store.dispatch({ type: 'todos/todoToggled', payload: 1 })
+
+store.dispatch({ type: 'filters/statusFilterChanged', payload: 'Active' })
+
+store.dispatch({
+  type: 'filters/colorFilterChanged',
+  payload: { color: 'red', changeType: 'added' }
+})
+
+unsubscribe()
+
+
 ReactDOM.render(
   <React.StrictMode>
     <App />

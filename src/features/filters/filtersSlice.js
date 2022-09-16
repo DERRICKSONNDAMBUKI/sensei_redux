@@ -7,7 +7,7 @@ const initialState = {
   colors: [],
 }
 
-export default filtersReducer = (state = initialState, action) => {
+const filtersReducer = (state = initialState, action) => {
   // The reducer normally looks at the action type field to decide what happens
   switch (action.type) {
     // CHANGE FILTER STATUS
@@ -30,3 +30,5 @@ export default filtersReducer = (state = initialState, action) => {
       return state
   }
 }
+
+export default filtersReducer
