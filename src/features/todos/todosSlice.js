@@ -33,22 +33,23 @@ const todosReducer = (state = initialState, action) => {
     // ADD TODO
     case ACTIONS.TODOS_TODO_ADDED: {
       // we need to return a new state object
-      return {
-        // that has all the existing state data
-        ...state,
-        // but has a new array for the `todos` field
-        todos: [
-          // with all of the old todos
-          ...state.todos,
-          // and the new todo object
-          {
-            // use an auto-incrementing numeric ID for this example
-            id: nextTdoId(state.todos),
-            text: action.payload,
-            completed: false,
-          },
-        ],
-      }
+      return [...state, action.payload]
+      // return {
+      //   // that has all the existing state data
+      //   ...state,
+      //   // but has a new array for the `todos` field
+      //   todos: [
+      //     // with all of the old todos
+      //     ...state.todos,
+      //     // and the new todo object
+      //     {
+      //       // use an auto-incrementing numeric ID for this example
+      //       id: nextTdoId(state.todos),
+      //       text: action.payload,
+      //       completed: false,
+      //     },
+      //   ],
+      // }
     }
 
     // TOGGLE/EDIT TODO
