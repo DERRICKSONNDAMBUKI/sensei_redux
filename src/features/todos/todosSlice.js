@@ -1,19 +1,23 @@
-const ACTIONS = {
+import { client } from '../../api/client'
+
+export const ACTIONS = {
   TODOS_TODO_ADDED: 'todos/todoAdded',
   TODOS_TODO_TOGGLE: 'todos/todoToggle',
+  TODOS_TODOS_LOADED: 'todos/todosLoaded',
 }
 
-const initialState = {
-  todos: [
-    // { id: 0, text: 'Learn React', completed: true },
-    // { id: 1, text: 'Learn Redux', completed: false, color: 'purple' },
-    // { id: 2, text: 'Build something fun!', completed: false, color: 'blue' },
-  ],
-  filters: {
-    status: 'All',
-    color: [],
-  },
-}
+// const initialState = {
+//   todos: [
+//     // { id: 0, text: 'Learn React', completed: true },
+//     // { id: 1, text: 'Learn Redux', completed: false, color: 'purple' },
+//     // { id: 2, text: 'Build something fun!', completed: false, color: 'blue' },
+//   ],
+//   filters: {
+//     status: 'All',
+//     color: [],
+//   },
+// }
+const initialState = []
 
 // set nextTodoId uniquely
 const nextTdoId = (todos) => {
@@ -66,10 +70,29 @@ const todosReducer = (state = initialState, action) => {
         }),
       }
     }
+
+    case ACTIONS.TODOS_TODOS_LOADED: {
+      // Replace the existing state entirely by returning the new value
+      return action.payload
+    }
     default:
       // If this reducer doesn't recognize the action type, or doesn't
       // care about this specific action, return the existing state unchanged
       return state
+  }
+}
+
+// thunk ()=>{}
+export const fetchTodos = async (dispatch, getState) => {
+  const response = await client.get('/fakeApi/todos')
+  dispatch({ type: ACTIONS.TODOS_TODOS_LOADED, payload: response.todos })
+}
+
+export const saveNewTodo = (text) => {
+  return async function saveNewTodoThunk(dispatch, getState) {
+    const initialTodo = { text }
+    const response = await client.post('/fakeApi/todos', { todo: initialTodo })
+    dispatch({ type: ACTIONS.TODOS_TODO_ADDED, payload: response.todo })
   }
 }
 

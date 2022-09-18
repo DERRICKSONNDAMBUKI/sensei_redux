@@ -7,6 +7,7 @@ import './api/server'
 
 import store from './store'
 import { Provider } from 'react-redux'
+import { fetchTodos } from './features/todos/todosSlice'
 
 // console.log('dispatching action');
 // store.dispatch({type:'todos/todoAdded', payload:'Learn about actions'})
@@ -41,6 +42,8 @@ import { Provider } from 'react-redux'
 // store.dispatch({ type: 'todos/todoAdded', payload: 'Try creating a store' })
 
 // // Omit existing React rendering logic
+
+store.dispatch(fetchTodos)
 
 ReactDOM.render(
   // Render a `<Provider>` around the entire `<App>`,
