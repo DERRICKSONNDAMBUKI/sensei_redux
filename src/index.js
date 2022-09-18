@@ -8,7 +8,6 @@ import './api/server'
 import store from './store'
 import { Provider } from 'react-redux'
 
-
 // console.log('dispatching action');
 // store.dispatch({type:'todos/todoAdded', payload:'Learn about actions'})
 // console.log('state after dispatch: ', store.getState());
