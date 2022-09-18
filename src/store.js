@@ -18,13 +18,12 @@ import rootReducer from './reducer'
 
 const middlewareEnhancer = applyMiddleware(print1, print2, print3)
 
-const composedEnhancer = compose(sayHiOnDispatch, includeMeaningOfLife)
-
+const composedEnhancer = compose(sayHiOnDispatch, includeMeaningOfLife, middlewareEnhancer)
 // Pass enhancer as the second arg, since there's no preloadedState
 const store = createStore(
   rootReducer,
-  middlewareEnhancer
-  // composedEnhancer
+//   middlewareEnhancer
+  composedEnhancer
 )
 
 export default store
