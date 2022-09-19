@@ -6,6 +6,7 @@ export const ACTIONS = {
   TODOS_TODO_TOGGLE: 'todos/todoToggle',
   TODOS_TODOS_LOADED: 'todos/todosLoaded',
   TODOS_ALL_COMPLETED: 'todos/allCompleted',
+  TODOS_TODOS_LOADING: 'todos/todosLoading',
 }
 
 // const initialState = {
@@ -20,7 +21,7 @@ export const ACTIONS = {
 //   },
 // }
 const initialState = {
-  status: 'idle',
+  status: 'idle', // or: 'loading', 'succeeded', 'failed'
   entities: [],
 }
 
@@ -41,7 +42,7 @@ export const todoAdded = (todo) => ({
 })
 
 // create selector
-export const selectTodos = (state) => state.todos
+export const selectTodos = (state) => state.todos.entities
 export const selectTodoById = (state, todoId) => {
   return selectTodos(state).find((todo) => todo.id === todoId)
 }
@@ -122,7 +123,6 @@ const todosReducer = (state = initialState, action) => {
       return {
         // again copy th entire state object
         ...state,
-
         // this time, we nee to make a copy of the old todos array
         entities: state.entities.map((todo) => {
           // If this isn't the todo item we're looking fo r, leave it alone
@@ -140,8 +140,20 @@ const todosReducer = (state = initialState, action) => {
 
     case ACTIONS.TODOS_TODOS_LOADED: {
       // Replace the existing state entirely by returning the new value
-      return action.payload
+      return {
+        ...state,
+        status: 'idle',
+        entities: action.payload,
+      }
     }
+
+    case ACTIONS.TODOS_TODOS_LOADING: {
+      return {
+        ...state,
+        status: 'loading',
+      }
+    }
+
     default:
       // If this reducer doesn't recognize the action type, or doesn't
       // care about this specific action, return the existing state unchanged
