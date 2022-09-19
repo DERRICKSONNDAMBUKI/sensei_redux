@@ -1,3 +1,4 @@
+import { createSelector } from 'reselect'
 import { client } from '../../api/client'
 
 export const ACTIONS = {
@@ -27,18 +28,61 @@ const initialState = []
 // }
 
 // action creators
-export const todosLoaded = (todos) => {
-  return {
-    type: ACTIONS.TODOS_TODOS_LOADED,
-    payload: todos,
+export const todosLoaded = (todos) => ({
+  type: ACTIONS.TODOS_TODOS_LOADED,
+  payload: todos,
+})
+export const todoAdded = (todo) => ({
+  type: ACTIONS.TODOS_TODO_ADDED,
+  payload: todo,
+})
+
+// create selector
+export const selectTodos = (state) => state.todos
+
+export const selectTodoIds = createSelector(
+  // First, pass one or more "input selector" functions:
+  (state) => state.todos,
+  // Then, an "output selector" that receives all the input results as arguments
+  // and returns a final result value
+  (todos) => todos.map((todo) => todo.id)
+)
+export const selectFilteredTodos = createSelector(
+  (state) => state.todos,
+  (state) => state.filters.status,
+  (todos, status) => {
+    if (status === StatusFilters.All) {
+      return todos
+    }
+    const completedStatus = status === StatusFilters.completed
+    return todos.filter((todo) => todo.completed === completedStatus)
+  },
+  // First input selector: all todos
+  selectTodos,
+  // Second input selector: all filter values
+  (state) => state.filters,
+  // Output selector: receives both values
+  (todos, filters) => {
+    const { status, colors } = filters
+    const showAllCompletions = status === StatusFilters.All
+    if (showAllCompletions && colors.length === 0) {
+      return todos
+    }
+
+    const completedStatus = status === StatusFilters.Completed
+    // Return either active or completed todos based on filter
+    return todos.filter((todo) => {
+      const statusMatches =
+        showAllCompletions || todo.completed === completedStatus
+      const colorMatches = colors.length === 0 || colors.includes(todo.color)
+      return statusMatches && colorMatches
+    })
   }
-}
-export const todoAdded = (todo) => {
-  return {
-    type: ACTIONS.TODOS_TODO_ADDED,
-    payload: todo,
-  }
-}
+)
+export const selectFilteredTodoIds = createSelector(
+  selectFilteredTodos,
+  (filteredTodos) => filteredTodos.map((todo) => todo.id)
+)
 
 const todosReducer = (state = initialState, action) => {
   // The reducer normally looks at the action type field to decide what happens
@@ -99,11 +143,9 @@ const todosReducer = (state = initialState, action) => {
 }
 
 // thunk ()=>{}
-export const fetchTodos = () => {
-  return async function fetchTodosThunk(dispatch, getState) {
-    const response = await client.get('/fakeApi/todos')
-    dispatch(todosLoaded(response.todos))
-  }
+export const fetchTodos = () => async (dispatch) => {
+  const response = await client.get('/fakeApi/todos')
+  dispatch(todosLoaded(response.todos))
 }
 
 export const saveNewTodo = (text) => {
