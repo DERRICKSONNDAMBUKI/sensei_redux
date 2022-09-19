@@ -1,10 +1,5 @@
-import { createStore, compose, applyMiddleware } from 'redux'
+import { createStore, applyMiddleware } from 'redux'
 import { composeWithDevTools } from 'redux-devtools-extension'
-import {
-  includeMeaningOfLife,
-  sayHiOnDispatch,
-} from './exampleAddons/enhancers'
-import { print1, print2, print3 } from './exampleAddons/middleware'
 import rootReducer from './reducer'
 import ThunkMiddleware from 'redux-thunk'
 

@@ -21,10 +21,10 @@ export const ACTIONS = {
 const initialState = []
 
 // set nextTodoId uniquely
-const nextTdoId = (todos) => {
-  const maxId = todos.reduce((maxId, todo) => Math.max(todo.id, maxId), -1)
-  return maxId + 1
-}
+// const nextTdoId = (todos) => {
+//   const maxId = todos.reduce((maxId, todo) => Math.max(todo.id, maxId), -1)
+//   return maxId + 1
+// }
 
 // action creators
 export const todosLoaded = (todos) => {
@@ -99,9 +99,11 @@ const todosReducer = (state = initialState, action) => {
 }
 
 // thunk ()=>{}
-export const fetchTodos = async (dispatch, getState) => {
-  const response = await client.get('/fakeApi/todos')
-  dispatch(todosLoaded(response.todos))
+export const fetchTodos = () => {
+  return async function fetchTodosThunk(dispatch, getState) {
+    const response = await client.get('/fakeApi/todos')
+    dispatch(todosLoaded(response.todos))
+  }
 }
 
 export const saveNewTodo = (text) => {

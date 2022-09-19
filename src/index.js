@@ -43,7 +43,7 @@ import { fetchTodos } from './features/todos/todosSlice'
 
 // // Omit existing React rendering logic
 
-store.dispatch(fetchTodos)
+store.dispatch(fetchTodos())
 
 ReactDOM.render(
   // Render a `<Provider>` around the entire `<App>`,
