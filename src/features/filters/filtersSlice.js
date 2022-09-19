@@ -1,4 +1,4 @@
-const ACTIONS = {
+export const ACTIONS_FILTER = {
   FILTERS_STATUS_FILTER_CHANGED: 'filters/statusFilterChanged',
   FILTERS_COLOR_FILTER_CHANGED: 'filters/colorFilterChanged',
 }
@@ -11,7 +11,7 @@ const initialState = {
 // action creators
 export const colorFilterChanged = (color, changeType) => {
   return {
-    type: ACTIONS.FILTERS_COLOR_FILTER_CHANGED,
+    type: ACTIONS_FILTER.FILTERS_COLOR_FILTER_CHANGED,
     payload: { color, changeType },
   }
 }
@@ -20,7 +20,7 @@ const filtersReducer = (state = initialState, action) => {
   // The reducer normally looks at the action type field to decide what happens
   switch (action.type) {
     // CHANGE FILTER STATUS
-    case ACTIONS.FILTERS_STATUS_FILTER_CHANGED: {
+    case ACTIONS_FILTER.FILTERS_STATUS_FILTER_CHANGED: {
       return {
         // COPY THE WHOLE STATE
         ...state,

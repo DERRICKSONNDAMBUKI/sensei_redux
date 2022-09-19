@@ -4,6 +4,7 @@ export const ACTIONS = {
   TODOS_TODO_ADDED: 'todos/todoAdded',
   TODOS_TODO_TOGGLE: 'todos/todoToggle',
   TODOS_TODOS_LOADED: 'todos/todosLoaded',
+  TODOS_ALL_COMPLETED: 'todos/allCompleted',
 }
 
 // const initialState = {
