@@ -25,6 +25,13 @@ const nextTdoId = (todos) => {
   return maxId + 1
 }
 
+export const todosLoaded = (todos) => {
+  return {
+    type: ACTIONS.TODOS_TODOS_LOADED,
+    payload: todos,
+  }
+}
+
 const todosReducer = (state = initialState, action) => {
   // The reducer normally looks at the action type field to decide what happens
   switch (action.type) {
@@ -86,7 +93,7 @@ const todosReducer = (state = initialState, action) => {
 // thunk ()=>{}
 export const fetchTodos = async (dispatch, getState) => {
   const response = await client.get('/fakeApi/todos')
-  dispatch({ type: ACTIONS.TODOS_TODOS_LOADED, payload: response.todos })
+  dispatch(todosLoaded(response.todos))
 }
 
 export const saveNewTodo = (text) => {
