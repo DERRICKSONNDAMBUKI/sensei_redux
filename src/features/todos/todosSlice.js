@@ -32,10 +32,14 @@ const initialState = {
 // }
 
 // action creators
+export const todoLoading=()=>({
+  type:ACTIONS.TODOS_TODOS_LOADING,
+})
 export const todosLoaded = (todos) => ({
   type: ACTIONS.TODOS_TODOS_LOADED,
   payload: todos,
 })
+
 export const todoAdded = (todo) => ({
   type: ACTIONS.TODOS_TODO_ADDED,
   payload: todo,
@@ -163,6 +167,7 @@ const todosReducer = (state = initialState, action) => {
 
 // thunk ()=>{}
 export const fetchTodos = () => async (dispatch) => {
+  dispatch(todoLoading())
   const response = await client.get('/fakeApi/todos')
   dispatch(todosLoaded(response.todos))
 }
