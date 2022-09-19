@@ -25,10 +25,17 @@ const nextTdoId = (todos) => {
   return maxId + 1
 }
 
+// action creators
 export const todosLoaded = (todos) => {
   return {
     type: ACTIONS.TODOS_TODOS_LOADED,
     payload: todos,
+  }
+}
+export const todoAdded = (todo) => {
+  return {
+    type: ACTIONS.TODOS_TODO_ADDED,
+    payload: todo,
   }
 }
 
@@ -100,7 +107,7 @@ export const saveNewTodo = (text) => {
   return async function saveNewTodoThunk(dispatch, getState) {
     const initialTodo = { text }
     const response = await client.post('/fakeApi/todos', { todo: initialTodo })
-    dispatch({ type: ACTIONS.TODOS_TODO_ADDED, payload: response.todo })
+    dispatch(todoAdded(response.todo))
   }
 }
 

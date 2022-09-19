@@ -1,10 +1,19 @@
 const ACTIONS = {
   FILTERS_STATUS_FILTER_CHANGED: 'filters/statusFilterChanged',
+  FILTERS_COLOR_FILTER_CHANGED: 'filters/colorFilterChanged',
 }
 
 const initialState = {
   status: 'All',
   colors: [],
+}
+
+// action creators
+export const colorFilterChanged = (color, changeType) => {
+  return {
+    type: ACTIONS.FILTERS_COLOR_FILTER_CHANGED,
+    payload: { color, changeType },
+  }
 }
 
 const filtersReducer = (state = initialState, action) => {
