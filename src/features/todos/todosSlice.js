@@ -19,7 +19,10 @@ export const ACTIONS = {
 //     color: [],
 //   },
 // }
-const initialState = []
+const initialState = {
+  status: 'idle',
+  entities: [],
+}
 
 // set nextTodoId uniquely
 // const nextTdoId = (todos) => {
@@ -39,7 +42,9 @@ export const todoAdded = (todo) => ({
 
 // create selector
 export const selectTodos = (state) => state.todos
-
+export const selectTodoById = (state, todoId) => {
+  return selectTodos(state).find((todo) => todo.id === todoId)
+}
 export const selectTodoIds = createSelector(
   // First, pass one or more "input selector" functions:
   (state) => state.todos,
@@ -84,6 +89,7 @@ export const selectFilteredTodoIds = createSelector(
   (filteredTodos) => filteredTodos.map((todo) => todo.id)
 )
 
+// TODO REDUCER
 const todosReducer = (state = initialState, action) => {
   // The reducer normally looks at the action type field to decide what happens
   switch (action.type) {
@@ -92,7 +98,7 @@ const todosReducer = (state = initialState, action) => {
     // ADD TODO
     case ACTIONS.TODOS_TODO_ADDED: {
       // we need to return a new state object
-      return [...state, action.payload]
+      return { ...state, entities: [...state.entities, action.payload] }
       // return {
       //   // that has all the existing state data
       //   ...state,
@@ -116,8 +122,9 @@ const todosReducer = (state = initialState, action) => {
       return {
         // again copy th entire state object
         ...state,
+
         // this time, we nee to make a copy of the old todos array
-        todos: state.todos.map((todo) => {
+        entities: state.entities.map((todo) => {
           // If this isn't the todo item we're looking fo r, leave it alone
           if (todo.id !== action.payload) return todo
 
