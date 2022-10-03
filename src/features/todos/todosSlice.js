@@ -7,6 +7,9 @@ export const ACTIONS = {
   TODOS_TODOS_LOADED: 'todos/todosLoaded',
   TODOS_ALL_COMPLETED: 'todos/allCompleted',
   TODOS_TODOS_LOADING: 'todos/todosLoading',
+  TODOS_COLOR_SELECTED: 'todos/colorSelected',
+  TODOS_TODO_DELETED: 'todos/todoDeleted',
+  TODOS_COMPLETED_CLEARED: 'todos/completedCleared',
 }
 
 // const initialState = {
@@ -22,7 +25,7 @@ export const ACTIONS = {
 // }
 const initialState = {
   status: 'idle', // or: 'loading', 'succeeded', 'failed'
-  entities: [],
+  entities: {},
 }
 
 // set nextTodoId uniquely
@@ -32,8 +35,8 @@ const initialState = {
 // }
 
 // action creators
-export const todoLoading=()=>({
-  type:ACTIONS.TODOS_TODOS_LOADING,
+export const todoLoading = () => ({
+  type: ACTIONS.TODOS_TODOS_LOADING,
 })
 export const todosLoaded = (todos) => ({
   type: ACTIONS.TODOS_TODOS_LOADED,
@@ -46,9 +49,14 @@ export const todoAdded = (todo) => ({
 })
 
 // create selector
-export const selectTodos = (state) => state.todos.entities
+const selectTodoEntities = (state) => state.todos.entities
+
+export const selectTodos = createSelector(selectTodoEntities, (entities) =>
+  Object.values(entities)
+)
+
 export const selectTodoById = (state, todoId) => {
-  return selectTodos(state).find((todo) => todo.id === todoId)
+  return selectTodoEntities(state)[todoId]
 }
 export const selectTodoIds = createSelector(
   // First, pass one or more "input selector" functions:
@@ -102,8 +110,9 @@ const todosReducer = (state = initialState, action) => {
 
     // ADD TODO
     case ACTIONS.TODOS_TODO_ADDED: {
+      const todo = action.payload
       // we need to return a new state object
-      return { ...state, entities: [...state.entities, action.payload] }
+      return { ...state, entities: { ...state.entities, [todo.id]: todo } }
       // return {
       //   // that has all the existing state data
       //   ...state,
@@ -124,30 +133,94 @@ const todosReducer = (state = initialState, action) => {
 
     // TOGGLE/EDIT TODO
     case ACTIONS.TODOS_TODO_TOGGLE: {
+      const todoId = action.payload
+      const todo = state.entities[todoId]
       return {
         // again copy th entire state object
         ...state,
         // this time, we nee to make a copy of the old todos array
-        entities: state.entities.map((todo) => {
-          // If this isn't the todo item we're looking fo r, leave it alone
-          if (todo.id !== action.payload) return todo
-
-          //   we've found the todo that has to change. Return a copy
-          return {
+        entities: {
+          ...state.entities,
+          [todoId]: {
             ...todo,
-            // flip the completed flag
             completed: !todo.completed,
-          }
-        }),
+          },
+        },
+        // entities: state.entities.map((todo) => {
+        //   // If this isn't the todo item we're looking fo r, leave it alone
+        //   if (todo.id !== action.payload) return todo
+
+        //   //   we've found the todo that has to change. Return a copy
+        //   return {
+        //     ...todo,
+        //     // flip the completed flag
+        //     completed: !todo.completed,
+        //   }
+        // }),
+      }
+    }
+
+    case ACTIONS.TODOS_COLOR_SELECTED: {
+      const { color, todoId } = action.payload
+      const todo = state.entities[todoId]
+
+      return {
+        ...state,
+        entities: {
+          ...state.entities,
+          [todoId]: {
+            ...todo,
+            color,
+          },
+        },
+      }
+    }
+
+    case ACTIONS.TODOS_TODO_DELETED: {
+      const newEntities = { ...state.entities }
+      delete newEntities[action.payload]
+      return {
+        ...state,
+        entities: newEntities,
+      }
+    }
+
+    case ACTIONS.TODOS_ALL_COMPLETED: {
+      const newEntities = { ...state.entities }
+      Object.values(newEntities).forEach((todo) => {
+        newEntities[todo.id] = { ...todo, completed: true }
+      })
+      return {
+        ...state,
+        entities: newEntities,
+      }
+    }
+
+    case ACTIONS.TODOS_COMPLETED_CLEARED: {
+      const newEntities = {
+        ...state.entities,
+      }
+      Object.values(newEntities).forEach((todo) => {
+        if (todo.completed) {
+          delete newEntities[todo.id]
+        }
+      })
+      return {
+        ...state,
+        entities: newEntities,
       }
     }
 
     case ACTIONS.TODOS_TODOS_LOADED: {
       // Replace the existing state entirely by returning the new value
+      const newEntities = {}
+      action.payload.forEach((todo) => {
+        newEntities[todo.id] = todo
+      })
       return {
         ...state,
         status: 'idle',
-        entities: action.payload,
+        entities: newEntities,
       }
     }
 
