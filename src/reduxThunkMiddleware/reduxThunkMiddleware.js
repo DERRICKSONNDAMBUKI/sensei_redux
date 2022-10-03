@@ -5,4 +5,6 @@ const reduxThunkMiddleware = (storeAPI) => (next) => (action) => {
     // Also, return whatever the thunk function returns
     return action(storeAPI.dispatch, storeAPI.getState)
   }
+  // Otherwise, it's a normal action - send it onwards
+  return next(action)
 }
